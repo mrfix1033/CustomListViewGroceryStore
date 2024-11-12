@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CustomListViewHomeWork</string>
+    <string name="grocery_store">Магазин продуктов</string>
+    <string name="create_store">Создать магазин</string>
+    <string name="add">Добавить</string>
+    <string name="product_title">Название продукта</string>
+    <string name="price">Цена</string>
+    <string name="incorrectPriceField">В поле \"Цена\" введено не число!</string>
+    <string name="exit">Выход</string>
+</resources>
