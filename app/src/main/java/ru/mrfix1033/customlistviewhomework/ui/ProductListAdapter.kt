@@ -21,7 +21,7 @@ class ProductListAdapter(private val context: Context, private val list: Mutable
         val person = list[position]
         textViewTitle.text = person.title
         textViewPrice.text = "${person.price}р."
-        imageView.setImageBitmap(person.image)
+        imageView.setImageURI(person.image)
         return view
     }
 }

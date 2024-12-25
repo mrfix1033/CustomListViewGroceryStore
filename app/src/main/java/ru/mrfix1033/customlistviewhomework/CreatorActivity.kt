@@ -1,11 +1,11 @@
 package ru.mrfix1033.customlistviewhomework
 
 import android.content.Intent
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -30,7 +30,7 @@ class CreatorActivity : AppCompatActivity() {
     private lateinit var listView: ListView
 
     private val productList = mutableListOf<Product>()
-    private var bitmap: Bitmap? = null
+    private var uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +63,13 @@ class CreatorActivity : AppCompatActivity() {
             setOrUpdateListViewAdapter()
             clearEditFields()
         }
+
+        listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                val intent = Intent(this, ProductInfoActivity::class.java)
+                intent.putExtra("product", productList[position])
+                startActivity(intent)
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -70,9 +77,8 @@ class CreatorActivity : AppCompatActivity() {
         when (requestCode) {
             RequestCode.PICK_PHOTO -> {
                 if (resultCode == RESULT_OK) {
-                    val selectedImageUri = data!!.data
-                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImageUri)
-                    imageView.setImageURI(selectedImageUri)
+                    uri = data!!.data
+                    imageView.setImageURI(uri)
                 }
             }
         }
@@ -83,8 +89,9 @@ class CreatorActivity : AppCompatActivity() {
         val productPrice = editTextPrice.text.toString().toFloatOrNull()
         if (productPrice == null) {
             Toast.makeText(this, getString(R.string.incorrectPriceField), Toast.LENGTH_SHORT).show()
-        return false}
-        val productImage = bitmap
+            return false
+        }
+        val productImage = uri
         val product = Product(productTitle, productPrice, productImage)
         productList.add(product)
         return true
@@ -100,7 +107,7 @@ class CreatorActivity : AppCompatActivity() {
         editTextTitle.text.clear()
         editTextPrice.text.clear()
         imageView.setImageBitmap(null)
-        bitmap = null
+        uri = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
