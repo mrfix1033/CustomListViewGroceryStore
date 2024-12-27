@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ProductInfoActivity">
+    tools:context=".activities.ProductDetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -27,22 +27,43 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="16dp" />
-
-        <TextView
-            android:id="@+id/textViewTitle"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Название:"/>
+        <EditText
+            android:id="@+id/editTextTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="32sp" />
+    </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="8dp" />
-
-        <TextView
-            android:id="@+id/textViewPrice"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="Цена:"/>
+        <EditText
+            android:id="@+id/editTextPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="р."/>
+    </LinearLayout>
     </LinearLayout>
 
 

@@ -1,10 +1,8 @@
-package ru.mrfix1033.customlistviewhomework
+package ru.mrfix1033.customlistviewhomework.activities
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
@@ -12,15 +10,16 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import ru.mrfix1033.customlistviewhomework.R
 import ru.mrfix1033.customlistviewhomework.data.Product
-import ru.mrfix1033.customlistviewhomework.enumerations.RequestCode
+import ru.mrfix1033.customlistviewhomework.menuhandlers.OptionsMenu
 import ru.mrfix1033.customlistviewhomework.ui.ProductListAdapter
 
-class CreatorActivity : AppCompatActivity() {
+class CreatorActivity : OptionsMenu(R.menu.main_exit) {
 
     private lateinit var toolbar: Toolbar
     private lateinit var imageView: ImageView
@@ -53,9 +52,9 @@ class CreatorActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         imageView.setOnClickListener {
-            val selectImageIntent = Intent(Intent.ACTION_PICK)
-            selectImageIntent.type = "image/*"
-            startActivityForResult(selectImageIntent, RequestCode.PICK_PHOTO)
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            launchActivityPickPhoto.launch(intent)
         }
 
         buttonAdd.setOnClickListener {
@@ -66,25 +65,14 @@ class CreatorActivity : AppCompatActivity() {
 
         listView.onItemClickListener =
             AdapterView.OnItemClickListener { parent, view, position, id ->
-                val intent = Intent(this, ProductInfoActivity::class.java)
+                val intent = Intent(this, ProductDetailsActivity::class.java)
+                intent.putExtra("index", position)
                 intent.putExtra("product", productList[position])
-                startActivity(intent)
+                launchActivityProductDetails.launch(intent)
             }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RequestCode.PICK_PHOTO -> {
-                if (resultCode == RESULT_OK) {
-                    uri = data!!.data
-                    imageView.setImageURI(uri)
-                }
-            }
-        }
-    }
-
-    fun createProduct(): Boolean {
+    private fun createProduct(): Boolean {
         val productTitle = editTextTitle.text.toString()
         val productPrice = editTextPrice.text.toString().toFloatOrNull()
         if (productPrice == null) {
@@ -97,28 +85,29 @@ class CreatorActivity : AppCompatActivity() {
         return true
     }
 
-    fun setOrUpdateListViewAdapter() {
+    private fun setOrUpdateListViewAdapter() {
         val adapter = ProductListAdapter(this, productList)
         listView.adapter = adapter
         adapter.notifyDataSetChanged()
     }
 
-    fun clearEditFields() {
+    private fun clearEditFields() {
         editTextTitle.text.clear()
         editTextPrice.text.clear()
         imageView.setImageBitmap(null)
         uri = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.itemExit -> finishAffinity()
+    val launchActivityProductDetails =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            productList[it.data!!.getIntExtra("index", -1)] =
+                it.data!!.getParcelableExtra("product")!!
+            setOrUpdateListViewAdapter()
         }
-        return true
-    }
+
+    val launchActivityPickPhoto =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            uri = it.data!!.data
+            imageView.setImageURI(uri)
+        }
 }

@@ -7,4 +7,5 @@
     <string name="price">Цена</string>
     <string name="incorrectPriceField">В поле \"Цена\" введено не число!</string>
     <string name="exit">Выход</string>
+    <string name="back">Назад</string>
 </resources>

@@ -15,8 +15,8 @@ class ProductListAdapter(private val context: Context, private val list: Mutable
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         if (view == null) view = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)!!
-        val textViewTitle = view.findViewById<TextView>(R.id.textViewTitle)
-        val textViewPrice = view.findViewById<TextView>(R.id.textViewPrice)
+        val textViewTitle = view.findViewById<TextView>(R.id.editTextTitle)
+        val textViewPrice = view.findViewById<TextView>(R.id.editTextPrice)
         val imageView = view.findViewById<ImageView>(R.id.imageView)
         val person = list[position]
         textViewTitle.text = person.title
